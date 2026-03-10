@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>theRuh — Stranger Edition</title>
+<meta name="description" content="theRuh — A personal blog. Writings from a stranger, for strangers. Indian postcard theme, antique paper, real words.">
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -14,65 +15,63 @@
     --paper-aged: #d4b896;
     --stamp-red: #8b1a1a;
     --stamp-blue: #1a2a5e;
-    --stamp-purple: #4a2060;
     --border: #7a5c3a;
-    --torn: #c4a882;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  @keyframes typeIn {
-    from { width: 0; opacity: 0; }
-    to { width: 100%; opacity: 1; }
-  }
-  @keyframes stampSlam {
-    0% { transform: scale(2) rotate(-8deg); opacity: 0; }
-    60% { transform: scale(0.95) rotate(-3deg); opacity: 1; }
-    80% { transform: scale(1.05) rotate(-3deg); }
-    100% { transform: scale(1) rotate(-3deg); opacity: 0.85; }
-  }
-  @keyframes paperLoad {
-    from { opacity: 0; transform: translateY(20px) rotate(0.3deg); }
-    to { opacity: 1; transform: translateY(0) rotate(0.3deg); }
-  }
   @keyframes inkBleed {
-    from { opacity: 0; letter-spacing: 0.3em; }
+    from { opacity: 0; letter-spacing: 0.4em; }
     to { opacity: 1; letter-spacing: normal; }
   }
-  @keyframes flickerIn {
-    0%,20%,40%,60% { opacity: 0; }
-    10%,30%,50%,100% { opacity: 1; }
+  @keyframes paperLoad {
+    from { opacity: 0; transform: translateY(24px) rotate(0.3deg); }
+    to { opacity: 1; transform: translateY(0) rotate(0.3deg); }
   }
   @keyframes cursorBlink {
     0%,100% { opacity: 1; }
     50% { opacity: 0; }
   }
-  @keyframes postmarkSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes stampSlam {
+    0% { transform: scale(1.6) rotate(-6deg); opacity: 0; }
+    70% { transform: scale(0.96) rotate(-3deg); opacity: 1; }
+    100% { transform: scale(1) rotate(-3deg); opacity: 0.9; }
   }
 
-  /* PAPER TEXTURE */
+  /* BODY — AGED PAPER */
   body {
     background-color: #2c1f0e;
     background-image:
-      repeating-linear-gradient(0deg, transparent, transparent 34px, rgba(0,0,0,0.04) 35px),
-      repeating-linear-gradient(90deg, transparent, transparent 34px, rgba(0,0,0,0.03) 35px),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
     font-family: 'Courier Prime', 'Courier New', Courier, monospace;
     color: var(--ink);
     min-height: 100vh;
   }
 
-  /* AGED PAPER OVERLAY */
-  .paper-overlay {
-    position: fixed; inset: 0; pointer-events: none; z-index: 1000;
-    background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    mix-blend-mode: multiply;
+  /* GRAIN OVERLAY */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='0.035'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
   }
 
-  /* === HEADER / MASTHEAD === */
+  /* READING PROGRESS */
+  .reading-bar {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0%;
+    background: var(--stamp-red);
+    z-index: 1000;
+    transition: width 0.1s linear;
+  }
+
+  /* ===== HEADER ===== */
   header {
     background: var(--paper);
     border-bottom: 3px double var(--border);
@@ -83,14 +82,14 @@
     content: '';
     position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse at 10% 50%, rgba(180,140,80,0.2) 0%, transparent 50%),
-      radial-gradient(ellipse at 90% 30%, rgba(160,120,60,0.15) 0%, transparent 50%),
-      repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(180,140,60,0.04) 21px);
+      radial-gradient(ellipse at 5% 60%, rgba(180,140,80,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 95% 20%, rgba(160,120,60,0.12) 0%, transparent 50%),
+      repeating-linear-gradient(90deg, transparent, transparent 22px, rgba(180,140,60,0.03) 23px);
     pointer-events: none;
   }
 
-  .masthead-wrap {
-    max-width: 900px;
+  .masthead {
+    max-width: 960px;
     margin: 0 auto;
     padding: 28px 24px 20px;
     position: relative;
@@ -99,113 +98,175 @@
   .masthead-top {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 10px;
-    margin-bottom: 14px;
-    font-size: 10px;
-    letter-spacing: 0.15em;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--ink-faded);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
   }
 
-  .stamp-logo {
+  /* ORIGINAL SEAL — not government, 100% custom */
+  .brand-seal {
     position: absolute;
-    right: 24px;
-    top: 20px;
-    width: 90px;
-    height: 90px;
+    right: 24px; top: 18px;
+    width: 88px; height: 88px;
   }
-  .stamp-logo svg { width: 100%; height: 100%; }
+  .brand-seal svg { width: 100%; height: 100%; }
 
   .masthead-title {
-    font-size: clamp(42px, 7vw, 72px);
+    font-size: clamp(44px, 8vw, 76px);
     font-weight: 700;
     letter-spacing: -0.02em;
-    line-height: 0.9;
+    line-height: 0.88;
     color: var(--ink);
     text-transform: uppercase;
-    position: relative;
+    animation: inkBleed 1.4s ease forwards;
     display: inline-block;
-    animation: inkBleed 1.2s ease forwards;
   }
   .masthead-title::after {
-    content: '|';
-    animation: cursorBlink 0.9s step-end infinite;
-    margin-left: 4px;
-    font-weight: 400;
+    content: '_';
+    animation: cursorBlink 0.85s step-end infinite;
+    color: var(--stamp-red);
   }
 
   .masthead-sub {
-    font-size: 11px;
+    margin-top: 8px;
+    font-size: 10.5px;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--stamp-red);
-    margin-top: 6px;
     border-top: 1px solid var(--stamp-red);
     border-bottom: 1px solid var(--stamp-red);
     display: inline-block;
-    padding: 3px 8px;
+    padding: 3px 10px;
   }
 
-  .masthead-meta {
+  .masthead-tagline {
+    margin-top: 10px;
     display: flex;
-    gap: 24px;
-    margin-top: 12px;
-    font-size: 11px;
+    gap: 20px;
+    font-size: 10px;
     color: var(--ink-faded);
     letter-spacing: 0.1em;
+    flex-wrap: wrap;
   }
+  .masthead-tagline span::before { content: '✦ '; color: var(--stamp-red); }
 
   /* NAV */
   nav {
     background: var(--ink);
-    padding: 0;
     border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
-  nav ul {
-    max-width: 900px;
+  .nav-inner {
+    max-width: 960px;
     margin: 0 auto;
     display: flex;
-    list-style: none;
-    gap: 0;
     flex-wrap: wrap;
+    list-style: none;
   }
-  nav ul li a {
+  .nav-inner li a {
     display: block;
-    padding: 10px 18px;
+    padding: 11px 16px;
     color: var(--paper);
     text-decoration: none;
-    font-size: 11px;
+    font-size: 10.5px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    border-right: 1px solid rgba(255,255,255,0.1);
-    transition: background 0.2s, color 0.2s;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.2s;
   }
-  nav ul li a:hover {
-    background: var(--stamp-red);
-    color: var(--paper);
-  }
-  nav ul li.active a { background: var(--stamp-red); }
+  .nav-inner li a:hover,
+  .nav-inner li.active a { background: var(--stamp-red); }
 
   /* MAIN LAYOUT */
-  .main-wrap {
-    max-width: 900px;
+  .layout {
+    max-width: 960px;
     margin: 0 auto;
-    padding: 30px 24px;
+    padding: 32px 24px;
     display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 30px;
+    grid-template-columns: 1fr 272px;
+    gap: 32px;
     align-items: start;
   }
 
-  /* ============ POST CARD ============ */
+  /* ===== EMPTY STATE ===== */
+  .empty-state {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 52px 36px;
+    text-align: center;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--paper-aged), 8px 8px 0 rgba(0,0,0,0.1);
+    transform: rotate(0.2deg);
+    animation: fadeIn 0.8s ease forwards;
+  }
+  .empty-state::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      transparent, transparent 27px, rgba(180,140,80,0.12) 28px
+    );
+    background-size: 100% 28px;
+    background-position: 0 10px;
+    pointer-events: none;
+  }
+  /* Torn top edge */
+  .empty-state::after {
+    content: '';
+    position: absolute;
+    top: -4px; left: 0; right: 0; height: 7px;
+    background: var(--paper);
+    clip-path: polygon(0% 100%,1% 0%,2% 80%,4% 10%,6% 90%,8% 20%,10% 75%,12% 5%,14% 85%,16% 30%,18% 95%,20% 15%,22% 75%,24% 40%,26% 88%,28% 10%,30% 65%,32% 30%,34% 90%,36% 20%,38% 70%,40% 10%,42% 80%,44% 25%,46% 78%,48% 15%,50% 85%,52% 35%,54% 80%,56% 10%,58% 72%,60% 25%,62% 90%,64% 20%,66% 75%,68% 5%,70% 82%,72% 30%,74% 88%,76% 15%,78% 70%,80% 20%,82% 90%,84% 10%,86% 75%,88% 35%,90% 95%,92% 20%,94% 80%,96% 10%,98% 70%,100% 100%);
+  }
+
+  .empty-envelope {
+    font-size: 52px;
+    margin-bottom: 20px;
+    display: block;
+    position: relative; z-index: 1;
+    animation: stampSlam 0.8s cubic-bezier(0.175,0.885,0.32,1.275) 0.5s both;
+  }
+  .empty-title {
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    margin-bottom: 14px;
+    position: relative; z-index: 1;
+    border-bottom: 2px solid var(--ink);
+    display: inline-block;
+    padding-bottom: 6px;
+  }
+  .empty-text {
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--ink-faded);
+    font-style: italic;
+    max-width: 400px;
+    margin: 0 auto 24px;
+    position: relative; z-index: 1;
+  }
+  .empty-postmark {
+    width: 80px; height: 80px;
+    margin: 0 auto 8px;
+    position: relative; z-index: 1;
+    opacity: 0.6;
+  }
+  .empty-postmark svg { width: 100%; height: 100%; }
+
+  /* ===== POSTCARD (blog post) ===== */
   .postcard {
     background: var(--paper);
     border: 1px solid var(--border);
-    position: relative;
     margin-bottom: 36px;
-    box-shadow: 3px 3px 0 var(--paper-aged), 6px 6px 0 rgba(0,0,0,0.12);
+    position: relative;
+    box-shadow: 3px 3px 0 var(--paper-aged), 6px 6px 0 rgba(0,0,0,0.1);
     animation: paperLoad 0.6s ease forwards;
     transform: rotate(0.3deg);
   }
@@ -214,96 +275,30 @@
     content: '';
     position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse at 0% 0%, rgba(160,120,50,0.08), transparent 40%),
-      radial-gradient(ellipse at 100% 100%, rgba(120,90,40,0.06), transparent 40%);
-    pointer-events: none;
-    z-index: 1;
+      radial-gradient(ellipse at 0% 0%, rgba(160,120,50,0.07), transparent 45%),
+      radial-gradient(ellipse at 100% 100%, rgba(120,90,40,0.05), transparent 45%);
+    pointer-events: none; z-index: 0;
   }
-  /* Torn top edge */
+  /* Torn top */
   .postcard::after {
     content: '';
     position: absolute;
-    top: -3px; left: 0; right: 0; height: 6px;
+    top: -4px; left: 0; right: 0; height: 7px;
     background: var(--paper);
-    clip-path: polygon(0% 100%, 1% 0%, 2% 80%, 3% 10%, 5% 90%, 7% 20%, 9% 70%, 11% 5%, 13% 85%, 15% 30%, 17% 95%, 19% 15%, 21% 75%, 23% 40%, 25% 85%, 27% 10%, 29% 65%, 31% 30%, 33% 90%, 35% 20%, 37% 70%, 39% 10%, 41% 80%, 43% 25%, 45% 75%, 47% 15%, 49% 85%, 51% 35%, 53% 80%, 55% 10%, 57% 70%, 59% 25%, 61% 90%, 63% 20%, 65% 75%, 67% 5%, 69% 80%, 71% 30%, 73% 85%, 75% 15%, 77% 70%, 79% 20%, 81% 90%, 83% 10%, 85% 75%, 87% 35%, 89% 95%, 91% 20%, 93% 80%, 95% 10%, 97% 70%, 99% 30%, 100% 100%);
+    clip-path: polygon(0% 100%,1% 0%,2% 80%,4% 10%,6% 90%,8% 20%,10% 75%,12% 5%,14% 85%,16% 30%,18% 95%,20% 15%,22% 75%,24% 40%,26% 88%,28% 10%,30% 65%,32% 30%,34% 90%,36% 20%,38% 70%,40% 10%,42% 80%,44% 25%,46% 78%,48% 15%,50% 85%,52% 35%,54% 80%,56% 10%,58% 72%,60% 25%,62% 90%,64% 20%,66% 75%,68% 5%,70% 82%,72% 30%,74% 88%,76% 15%,78% 70%,80% 20%,82% 90%,84% 10%,86% 75%,88% 35%,90% 95%,92% 20%,94% 80%,96% 10%,98% 70%,100% 100%);
   }
 
   .postcard-header {
     border-bottom: 1px dashed var(--border);
-    padding: 16px 20px 12px;
+    padding: 18px 20px 14px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    position: relative;
-    z-index: 2;
+    position: relative; z-index: 1;
   }
 
-  .post-stamp-area {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-  }
+  .post-headline { flex: 1; padding-right: 16px; }
 
-  /* POSTAGE STAMP */
-  .postage-stamp {
-    width: 65px;
-    height: 80px;
-    background: var(--paper-dark);
-    border: 1px solid var(--border);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 8px;
-    text-align: center;
-    line-height: 1.2;
-    overflow: visible;
-    /* Perforation effect */
-    box-shadow:
-      -3px 0 0 0 var(--paper), -3px 0 0 1px var(--border),
-       3px 0 0 0 var(--paper),  3px 0 0 1px var(--border),
-       0 -3px 0 0 var(--paper), 0 -3px 0 1px var(--border),
-       0  3px 0 0 var(--paper), 0  3px 0 1px var(--border);
-    background-image: repeating-linear-gradient(
-      0deg, transparent, transparent 3px, rgba(0,0,0,0.03) 4px
-    );
-  }
-  .stamp-inner {
-    border: 1px solid var(--border);
-    width: 85%; height: 55%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    margin-bottom: 3px;
-    background: linear-gradient(135deg, #e8d5b0 0%, #d4b896 100%);
-  }
-  .stamp-denom { font-size: 9px; font-weight: 700; letter-spacing: 0.05em; }
-  .stamp-country { font-size: 7px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--stamp-red); }
-
-  /* POSTMARK SEAL */
-  .postmark {
-    width: 72px;
-    height: 72px;
-    position: relative;
-  }
-  .postmark svg { width: 100%; height: 100%; }
-  .postmark-date {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%) rotate(-15deg);
-    font-size: 7px;
-    font-weight: 700;
-    text-align: center;
-    color: var(--stamp-red);
-    letter-spacing: 0.05em;
-    line-height: 1.3;
-  }
-
-  .post-headline {
-    flex: 1;
-    padding-right: 16px;
-  }
   .post-category {
     font-size: 9px;
     letter-spacing: 0.25em;
@@ -311,9 +306,10 @@
     color: var(--stamp-red);
     border: 1px solid var(--stamp-red);
     display: inline-block;
-    padding: 2px 6px;
-    margin-bottom: 8px;
+    padding: 2px 7px;
+    margin-bottom: 9px;
   }
+
   .post-title {
     font-size: 22px;
     font-weight: 700;
@@ -321,125 +317,136 @@
     color: var(--ink);
     text-transform: uppercase;
     letter-spacing: 0.02em;
-    margin-bottom: 8px;
+    margin-bottom: 9px;
     border-bottom: 2px solid var(--ink);
     padding-bottom: 6px;
   }
+
   .post-byline {
     font-size: 10px;
     color: var(--ink-faded);
     letter-spacing: 0.12em;
     display: flex;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
   }
-  .post-byline span::before { content: '• '; color: var(--stamp-red); }
-  .post-byline span:first-child::before { content: ''; }
+  .post-byline span + span::before { content: '· '; color: var(--stamp-red); }
 
-  /* MEDIA AREA */
-  .post-media {
-    position: relative;
-    z-index: 2;
-    border-bottom: 1px dashed var(--border);
-    overflow: hidden;
-    background: var(--paper-dark);
+  /* STAMP AREA */
+  .post-stamp-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
   }
-  .post-media img {
+
+  .postage-stamp {
+    width: 64px; height: 78px;
+    background: var(--paper-dark);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    text-align: center;
+    line-height: 1.3;
+    box-shadow:
+      -3px 0 0 0 var(--paper), -3px 0 0 1px var(--border),
+       3px 0 0 0 var(--paper),  3px 0 0 1px var(--border),
+       0 -3px 0 0 var(--paper), 0 -3px 0 1px var(--border),
+       0  3px 0 0 var(--paper), 0  3px 0 1px var(--border);
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 3px, rgba(0,0,0,0.025) 4px
+    );
+  }
+  .stamp-inner {
+    border: 1px solid var(--border);
+    width: 84%; height: 52%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    margin-bottom: 3px;
+    background: linear-gradient(135deg, #e8d5b0, #d4b896);
+  }
+  .stamp-denom { font-size: 9px; font-weight: 700; }
+  .stamp-country { font-size: 7px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--stamp-red); }
+
+  /* POSTMARK — custom drawn, NOT government */
+  .postmark {
+    width: 68px; height: 68px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .postmark svg { width: 100%; height: 100%; }
+  .postmark-date {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    font-size: 6.5px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--stamp-red);
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* POST IMAGE */
+  .post-image {
     width: 100%;
     display: block;
-    filter: sepia(30%) contrast(1.05);
-    transition: filter 0.3s;
+    max-height: 340px;
+    object-fit: cover;
+    filter: sepia(25%) contrast(1.04);
+    border-bottom: 1px dashed var(--border);
+    position: relative; z-index: 1;
   }
-  .post-media:hover img { filter: sepia(10%) contrast(1.08); }
-  .media-caption {
+  .post-image-caption {
     padding: 6px 20px;
     font-size: 10px;
     font-style: italic;
     color: var(--ink-faded);
-    border-bottom: 1px solid var(--paper-aged);
     background: var(--paper-dark);
-  }
-
-  /* VIDEO EMBED PLACEHOLDER */
-  .post-video {
-    position: relative;
-    z-index: 2;
-    background: var(--ink);
-    aspect-ratio: 16/9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1px dashed var(--border);
-    cursor: pointer;
-    overflow: hidden;
-  }
-  .post-video::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 1px,
-      transparent 1px, transparent 8px
-    );
-  }
-  .play-btn {
-    width: 56px; height: 56px;
-    border: 2px solid var(--paper);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    color: var(--paper);
+    border-bottom: 1px solid var(--paper-aged);
     position: relative; z-index: 1;
-    transition: transform 0.2s;
-  }
-  .post-video:hover .play-btn { transform: scale(1.1); }
-  .video-label {
-    position: absolute; bottom: 10px; left: 0; right: 0;
-    text-align: center;
-    font-size: 10px;
-    color: rgba(245,234,213,0.6);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
   }
 
   /* POST BODY */
   .post-body {
-    padding: 18px 20px;
-    position: relative;
-    z-index: 2;
-    line-height: 1.75;
+    padding: 18px 22px;
+    position: relative; z-index: 1;
+    line-height: 1.8;
     font-size: 13.5px;
     color: var(--ink);
-    /* Ruled lines */
     background-image: repeating-linear-gradient(
-      transparent, transparent 27px, rgba(180,140,80,0.15) 28px
+      transparent, transparent 26px, rgba(180,140,80,0.13) 27px
     );
-    background-size: 100% 28px;
+    background-size: 100% 27px;
     background-position: 0 8px;
   }
   .post-body p { margin-bottom: 14px; }
   .post-body p:first-child::first-letter {
-    font-size: 42px;
+    font-size: 44px;
     font-weight: 700;
     float: left;
-    line-height: 0.8;
-    margin: 4px 6px 0 0;
+    line-height: 0.78;
+    margin: 6px 7px 0 0;
     color: var(--stamp-red);
     border: 1px solid var(--stamp-red);
-    padding: 4px 8px;
+    padding: 5px 9px;
     background: var(--paper-dark);
   }
 
+  /* TAGS */
   .post-tags {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    display: flex; gap: 8px; flex-wrap: wrap;
     padding: 0 20px 14px;
-    position: relative; z-index: 2;
+    position: relative; z-index: 1;
   }
   .tag {
     font-size: 9px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     border: 1px solid var(--border);
     padding: 2px 7px;
@@ -451,97 +458,101 @@
 
   /* POST ACTIONS */
   .post-actions {
-    display: flex;
-    gap: 16px;
-    padding: 12px 20px;
+    display: flex; gap: 0;
     border-top: 1px dashed var(--border);
     border-bottom: 1px dashed var(--border);
-    position: relative; z-index: 2;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-faded);
+    position: relative; z-index: 1;
   }
   .action-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
+    flex: 1;
+    padding: 10px 8px;
     border: none;
     background: none;
     font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 0.12em;
+    font-size: 10px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-faded);
-    padding: 4px 8px;
-    border: 1px solid transparent;
+    cursor: pointer;
+    border-right: 1px dashed var(--border);
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
   }
-  .action-btn:hover { border-color: var(--border); background: var(--paper-dark); color: var(--ink); }
-  .action-btn.liked { color: var(--stamp-red); border-color: var(--stamp-red); }
+  .action-btn:last-child { border-right: none; }
+  .action-btn:hover { background: var(--paper-dark); color: var(--ink); }
+  .action-btn.liked { color: var(--stamp-red); background: rgba(139,26,26,0.06); }
 
-  /* ============ REVIEWS / COMMENTS ============ */
-  .reviews-section {
-    padding: 16px 20px 20px;
-    position: relative; z-index: 2;
+  /* ===== COMMENTS / REVIEWS ===== */
+  .comments-section {
+    padding: 18px 22px 22px;
+    position: relative; z-index: 1;
   }
-  .reviews-title {
-    font-size: 11px;
+  .comments-title {
+    font-size: 10px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--ink-faded);
     margin-bottom: 16px;
+    padding-bottom: 7px;
     border-bottom: 1px solid var(--paper-aged);
-    padding-bottom: 8px;
   }
 
-  .review-card {
+  /* individual comment — postcard style */
+  .comment-card {
     background: var(--paper-dark);
     border: 1px solid var(--paper-aged);
     padding: 14px 16px;
     margin-bottom: 14px;
     position: relative;
     transform: rotate(-0.2deg);
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.07);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.06);
   }
-  .review-card:nth-child(even) { transform: rotate(0.2deg); }
-  .review-header {
+  .comment-card:nth-child(even) { transform: rotate(0.2deg); }
+  .comment-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 10px;
   }
-  .review-author-block { display: flex; align-items: center; gap: 10px; }
-  .review-avatar {
+  .comment-author-wrap { display: flex; align-items: center; gap: 10px; }
+  .comment-avatar {
     width: 32px; height: 32px;
-    border: 1px solid var(--border);
     border-radius: 50%;
+    border: 1px solid var(--border);
     background: var(--paper-aged);
     display: flex; align-items: center; justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink);
-    flex-shrink: 0;
+    font-size: 13px; font-weight: 700;
+    color: var(--ink); flex-shrink: 0;
   }
-  .review-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-  .review-meta { font-size: 9px; color: var(--ink-faded); letter-spacing: 0.08em; }
-  .review-mini-stamp {
-    width: 44px; height: 44px;
-    flex-shrink: 0;
-  }
-  .review-mini-stamp svg { width: 100%; height: 100%; }
-  .review-body { font-size: 12px; line-height: 1.65; color: var(--ink); font-style: italic; }
+  .comment-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .comment-meta { font-size: 9px; color: var(--ink-faded); letter-spacing: 0.07em; }
+  .comment-mini-stamp { width: 42px; height: 42px; flex-shrink: 0; }
+  .comment-mini-stamp svg { width: 100%; height: 100%; }
+  .comment-body { font-size: 12px; line-height: 1.7; color: var(--ink); font-style: italic; }
 
-  /* ADD REVIEW FORM */
-  .add-review {
+  /* NO COMMENTS YET */
+  .no-comments {
+    text-align: center;
+    padding: 16px;
+    font-size: 11px;
+    color: var(--ink-faded);
+    font-style: italic;
+    border: 1px dashed var(--paper-aged);
+    margin-bottom: 14px;
+    letter-spacing: 0.08em;
+  }
+
+  /* COMMENT FORM */
+  .comment-form {
     background: var(--paper);
     border: 1px dashed var(--border);
     padding: 16px;
-    margin-top: 12px;
-    position: relative;
+    margin-top: 10px;
   }
-  .add-review-title {
+  .comment-form-title {
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -549,7 +560,7 @@
     margin-bottom: 12px;
   }
   .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
-  .form-input {
+  .f-input {
     flex: 1;
     background: var(--paper-dark);
     border: 1px solid var(--border);
@@ -559,10 +570,11 @@
     color: var(--ink);
     outline: none;
     transition: border-color 0.2s;
+    width: 100%;
   }
-  .form-input:focus { border-color: var(--ink); }
-  .form-input::placeholder { color: var(--paper-aged); font-style: italic; }
-  .form-textarea {
+  .f-input:focus { border-color: var(--ink); }
+  .f-input::placeholder { color: var(--paper-aged); font-style: italic; }
+  .f-textarea {
     width: 100%;
     background: var(--paper-dark);
     border: 1px solid var(--border);
@@ -572,53 +584,47 @@
     color: var(--ink);
     outline: none;
     resize: vertical;
-    min-height: 80px;
+    min-height: 88px;
     margin-bottom: 10px;
-    line-height: 1.65;
-    /* Ruled lines */
+    line-height: 1.7;
     background-image: repeating-linear-gradient(
-      var(--paper-dark), var(--paper-dark) 26px, rgba(180,140,80,0.2) 27px
+      var(--paper-dark), var(--paper-dark) 25px, rgba(180,140,80,0.18) 26px
     );
-    background-size: 100% 27px;
-    background-position: 0 6px;
+    background-size: 100% 26px;
+    background-position: 0 5px;
   }
-  .form-textarea:focus { border-color: var(--ink); }
-  .submit-btn {
+  .f-textarea:focus { border-color: var(--ink); }
+  .send-btn {
     background: var(--ink);
     color: var(--paper);
     border: none;
-    padding: 8px 20px;
+    padding: 9px 22px;
     font-family: inherit;
-    font-size: 11px;
+    font-size: 10.5px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     cursor: pointer;
     transition: background 0.2s;
-    position: relative;
-    overflow: hidden;
   }
-  .submit-btn:hover { background: var(--stamp-red); }
-  .submit-btn::after {
-    content: 'DISPATCH ✉';
-  }
+  .send-btn:hover { background: var(--stamp-red); }
 
-  /* ============ SIDEBAR ============ */
-  .sidebar { display: flex; flex-direction: column; gap: 24px; }
+  /* ===== SIDEBAR ===== */
+  .sidebar { display: flex; flex-direction: column; gap: 22px; }
 
-  .sidebar-widget {
+  .widget {
     background: var(--paper);
     border: 1px solid var(--border);
-    position: relative;
     box-shadow: 2px 2px 0 var(--paper-aged);
     transform: rotate(-0.4deg);
   }
-  .sidebar-widget:nth-child(even) { transform: rotate(0.4deg); }
-  .widget-header {
+  .widget:nth-child(even) { transform: rotate(0.4deg); }
+
+  .widget-head {
     background: var(--ink);
     color: var(--paper);
-    padding: 8px 14px;
-    font-size: 10px;
-    letter-spacing: 0.25em;
+    padding: 9px 14px;
+    font-size: 9.5px;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
     display: flex;
     justify-content: space-between;
@@ -626,1092 +632,39 @@
   }
   .widget-body { padding: 14px; }
 
-  /* AUTHOR PROFILE */
-  .author-profile { text-align: center; }
+  /* AUTHOR */
   .author-photo {
-    width: 80px; height: 80px;
+    width: 78px; height: 78px;
     border-radius: 50%;
     border: 3px double var(--border);
     background: var(--paper-dark);
     margin: 0 auto 10px;
-    overflow: hidden;
     display: flex; align-items: center; justify-content: center;
-    font-size: 36px;
-    position: relative;
+    font-size: 34px;
+    overflow: hidden;
   }
-  .author-photo::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.15), transparent);
-    border-radius: 50%;
-  }
-  .author-name { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-  .author-handle { font-size: 10px; color: var(--stamp-red); letter-spacing: 0.1em; margin-bottom: 10px; }
-  .author-bio { font-size: 11px; line-height: 1.6; color: var(--ink-faded); font-style: italic; margin-bottom: 12px; }
+  .author-photo img { width: 100%; height: 100%; object-fit: cover; filter: sepia(20%); }
+  .author-name { text-align: center; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 3px; }
+  .author-handle { text-align: center; font-size: 10px; color: var(--stamp-red); letter-spacing: 0.1em; margin-bottom: 10px; }
+  .author-bio { font-size: 11px; line-height: 1.65; color: var(--ink-faded); font-style: italic; margin-bottom: 12px; text-align: center; }
   .author-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
     gap: 6px;
     border-top: 1px dashed var(--border);
     padding-top: 10px;
     margin-bottom: 12px;
+    text-align: center;
   }
-  .stat-item { text-align: center; }
-  .stat-num { font-size: 16px; font-weight: 700; color: var(--ink); display: block; }
-  .stat-label { font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faded); }
-  .author-links { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
-  .author-link {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    border: 1px solid var(--border);
-    padding: 3px 8px;
-    color: var(--ink-faded);
-    text-decoration: none;
+  .stat-num { font-size: 16px; font-weight: 700; display: block; }
+  .stat-lbl { font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faded); }
+  .author-socials { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .social-link {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid var(--border); padding: 3px 8px;
+    color: var(--ink-faded); text-decoration: none;
     transition: all 0.2s;
   }
-  .author-link:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .social-link:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
   /* SEARCH */
-  .search-wrap { display: flex; gap: 0; }
-  .search-input {
-    flex: 1;
-    background: var(--paper-dark);
-    border: 1px solid var(--border);
-    border-right: none;
-    padding: 7px 10px;
-    font-family: inherit;
-    font-size: 11px;
-    color: var(--ink);
-    outline: none;
-  }
-  .search-btn {
-    background: var(--ink);
-    border: 1px solid var(--ink);
-    color: var(--paper);
-    padding: 7px 12px;
-    font-family: inherit;
-    font-size: 11px;
-    cursor: pointer;
-    letter-spacing: 0.1em;
-    transition: background 0.2s;
-  }
-  .search-btn:hover { background: var(--stamp-red); border-color: var(--stamp-red); }
-
-  /* CATEGORIES */
-  .category-list { list-style: none; }
-  .category-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 7px 0;
-    border-bottom: 1px dashed var(--paper-aged);
-    font-size: 12px;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-  .category-list li:last-child { border-bottom: none; }
-  .category-list li:hover { color: var(--stamp-red); }
-  .cat-count {
-    font-size: 9px;
-    background: var(--paper-dark);
-    border: 1px solid var(--border);
-    padding: 1px 6px;
-    color: var(--ink-faded);
-  }
-
-  /* RECENT POSTS */
-  .recent-post-item {
-    display: flex;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px dashed var(--paper-aged);
-    cursor: pointer;
-  }
-  .recent-post-item:last-child { border-bottom: none; }
-  .recent-thumb {
-    width: 44px; height: 44px;
-    background: var(--paper-dark);
-    border: 1px solid var(--border);
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    filter: sepia(40%);
-  }
-  .recent-title { font-size: 11px; font-weight: 700; line-height: 1.35; margin-bottom: 3px; }
-  .recent-date { font-size: 9px; color: var(--ink-faded); letter-spacing: 0.08em; }
-
-  /* NEWSLETTER */
-  .newsletter-text { font-size: 11px; color: var(--ink-faded); line-height: 1.6; margin-bottom: 10px; font-style: italic; }
-  .newsletter-wrap { display: flex; flex-direction: column; gap: 6px; }
-
-  /* TAGS CLOUD */
-  .tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
-
-  /* ARCHIVE */
-  .archive-list { list-style: none; }
-  .archive-list li {
-    font-size: 11px;
-    padding: 5px 0;
-    border-bottom: 1px dashed var(--paper-aged);
-    display: flex;
-    justify-content: space-between;
-    cursor: pointer;
-  }
-  .archive-list li:hover { color: var(--stamp-red); }
-
-  /* === NEW POST BUTTON === */
-  .new-post-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: var(--stamp-red);
-    color: var(--paper);
-    border: 2px solid var(--paper);
-    padding: 12px 20px;
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
-    z-index: 500;
-    transition: all 0.2s;
-  }
-  .new-post-btn:hover {
-    background: var(--ink);
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
-  }
-
-  /* === NEW POST MODAL === */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(20,12,4,0.85);
-    z-index: 900;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .modal-overlay.active { display: flex; }
-  .modal {
-    background: var(--paper);
-    border: 2px solid var(--border);
-    width: 100%;
-    max-width: 680px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
-    transform: rotate(-0.5deg);
-  }
-  .modal-header {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 14px 20px;
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .modal-close {
-    background: none;
-    border: 1px solid var(--paper);
-    color: var(--paper);
-    font-family: inherit;
-    font-size: 11px;
-    padding: 3px 8px;
-    cursor: pointer;
-    letter-spacing: 0.1em;
-  }
-  .modal-close:hover { background: var(--stamp-red); border-color: var(--stamp-red); }
-  .modal-body { padding: 20px; }
-  .modal-field { margin-bottom: 14px; }
-  .modal-label {
-    display: block;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink-faded);
-    margin-bottom: 5px;
-  }
-  .modal-input, .modal-textarea, .modal-select {
-    width: 100%;
-    background: var(--paper-dark);
-    border: 1px solid var(--border);
-    padding: 8px 10px;
-    font-family: inherit;
-    font-size: 13px;
-    color: var(--ink);
-    outline: none;
-  }
-  .modal-textarea { resize: vertical; min-height: 120px; }
-  .modal-select option { background: var(--paper); }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; border-top: 1px dashed var(--border); padding-top: 16px; }
-  .btn-publish {
-    background: var(--ink);
-    color: var(--paper);
-    border: none;
-    padding: 9px 22px;
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-publish:hover { background: var(--stamp-red); }
-  .btn-draft {
-    background: none;
-    color: var(--ink-faded);
-    border: 1px solid var(--border);
-    padding: 9px 22px;
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .btn-draft:hover { border-color: var(--ink); color: var(--ink); }
-
-  /* FILE UPLOAD AREA */
-  .upload-area {
-    border: 2px dashed var(--border);
-    padding: 18px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--paper-dark);
-  }
-  .upload-area:hover { border-color: var(--ink); background: var(--paper); }
-  .upload-icon { font-size: 24px; margin-bottom: 6px; }
-  .upload-text { font-size: 11px; color: var(--ink-faded); letter-spacing: 0.1em; }
-  .upload-input { display: none; }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    top: 24px; left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: var(--ink);
-    color: var(--paper);
-    padding: 10px 24px;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    border: 1px solid var(--paper);
-    z-index: 9999;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* FOOTER */
-  footer {
-    background: var(--ink);
-    color: var(--paper-aged);
-    padding: 30px 24px;
-    margin-top: 10px;
-  }
-  .footer-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 20px;
-    margin-bottom: 16px;
-  }
-  .footer-title {
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    color: var(--paper);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 6px;
-  }
-  .footer-text { font-size: 11px; line-height: 1.65; color: rgba(245,234,213,0.6); }
-  .footer-links { list-style: none; }
-  .footer-links li { margin-bottom: 5px; }
-  .footer-links li a {
-    font-size: 11px;
-    color: rgba(245,234,213,0.5);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: color 0.2s;
-  }
-  .footer-links li a:hover { color: var(--paper); }
-  .footer-bottom {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 10px;
-    color: rgba(245,234,213,0.4);
-    letter-spacing: 0.1em;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 680px) {
-    .main-wrap { grid-template-columns: 1fr; }
-    .footer-inner { grid-template-columns: 1fr; }
-    .masthead-title { font-size: 38px; }
-  }
-
-  /* TYPEWRITER CURSOR ON TITLES */
-  .tw-cursor::after {
-    content: '_';
-    animation: cursorBlink 0.8s step-end infinite;
-    color: var(--stamp-red);
-  }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: var(--paper-dark); }
-  ::-webkit-scrollbar-thumb { background: var(--border); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--ink); }
-
-  /* PAGINATION */
-  .pagination {
-    display: flex;
-    gap: 4px;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  .page-btn {
-    width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    font-family: inherit;
-    font-size: 12px;
-    cursor: pointer;
-    color: var(--ink);
-    transition: all 0.2s;
-  }
-  .page-btn:hover, .page-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-
-  /* READING PROGRESS */
-  .reading-progress {
-    position: fixed;
-    top: 0; left: 0;
-    height: 3px;
-    background: var(--stamp-red);
-    z-index: 9998;
-    width: 0%;
-    transition: width 0.1s;
-  }
-</style>
-</head>
-<body>
-
-<div class="paper-overlay"></div>
-<div class="reading-progress" id="readingProgress"></div>
-
-<!-- TOAST -->
-<div class="toast" id="toast">✉ DISPATCH SENT — POST DELIVERED!</div>
-
-<!-- HEADER -->
-<header>
-  <div class="masthead-wrap">
-    <div class="masthead-top">
-      <span>VOLUME I &nbsp;|&nbsp; ISSUE 001 &nbsp;|&nbsp; ESTD. MMXXV</span>
-      <span>POST OF THE SOUL &nbsp;·&nbsp; INDIA</span>
-    </div>
-
-    <div class="stamp-logo" title="theRuh Official Seal">
-      <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="45" cy="45" r="42" stroke="#7a5c3a" stroke-width="1.5" fill="none"/>
-        <circle cx="45" cy="45" r="36" stroke="#7a5c3a" stroke-width="0.75" fill="none"/>
-        <circle cx="45" cy="45" r="22" stroke="#7a5c3a" stroke-width="1" fill="none"/>
-        <text x="45" y="20" text-anchor="middle" font-family="Courier New" font-size="5.5" fill="#1a1008" letter-spacing="2">◆ STRANGER EDITION ◆</text>
-        <text x="45" y="50" text-anchor="middle" font-family="Courier New" font-size="12" font-weight="bold" fill="#8b1a1a">ਰੂਹ</text>
-        <text x="45" y="60" text-anchor="middle" font-family="Courier New" font-size="5" fill="#1a1008" letter-spacing="1">theRuh</text>
-        <text x="45" y="73" text-anchor="middle" font-family="Courier New" font-size="4.5" fill="#1a1008" letter-spacing="1.5">✦ SOUL SPEAKS ✦</text>
-      </svg>
-    </div>
-
-    <div class="masthead-title">theRuh</div>
-    <div class="masthead-sub">[ Stranger Edition — Writings from the unnamed ]</div>
-    <div class="masthead-meta">
-      <span>✦ A Journal of Peculiar Souls</span>
-      <span>✦ Posted from Somewhere, India</span>
-      <span>✦ Read with chai</span>
-    </div>
-  </div>
-</header>
-
-<!-- NAV -->
-<nav>
-  <ul>
-    <li class="active"><a href="#">HOME</a></li>
-    <li><a href="#">DISPATCHES</a></li>
-    <li><a href="#">STRANGER LETTERS</a></li>
-    <li><a href="#">PHOTOGRAPHS</a></li>
-    <li><a href="#">REELS & TAPES</a></li>
-    <li><a href="#">ABOUT THE AUTHOR</a></li>
-    <li><a href="#">CONTACT</a></li>
-    <li><a href="#" onclick="openModal(); return false;">+ NEW POST</a></li>
-  </ul>
-</nav>
-
-<!-- MAIN -->
-<div class="main-wrap">
-  <main>
-
-    <!-- ============ POST 1 ============ -->
-    <article class="postcard" style="animation-delay:0.1s">
-      <div class="postcard-header">
-        <div class="post-headline">
-          <div class="post-category">Stranger Letters · Vol. I</div>
-          <h2 class="post-title tw-cursor">The Town That Forgot Its Own Name</h2>
-          <div class="post-byline">
-            <span>By Arjun S. Mehta</span>
-            <span>3 min read</span>
-            <span>12 comments</span>
-            <span>47 likes</span>
-          </div>
-        </div>
-        <div class="post-stamp-area">
-          <div class="postage-stamp">
-            <div class="stamp-inner">🏛️</div>
-            <div class="stamp-denom">₹ 2.50</div>
-            <div class="stamp-country">BHARAT</div>
-          </div>
-          <div class="postmark">
-            <svg viewBox="0 0 72 72">
-              <circle cx="36" cy="36" r="33" stroke="#8b1a1a" stroke-width="1.5" fill="none" stroke-dasharray="3,3"/>
-              <circle cx="36" cy="36" r="25" stroke="#8b1a1a" stroke-width="0.75" fill="none"/>
-              <line x1="14" y1="36" x2="58" y2="36" stroke="#8b1a1a" stroke-width="1.5"/>
-              <line x1="14" y1="32" x2="58" y2="32" stroke="#8b1a1a" stroke-width="0.5"/>
-              <line x1="14" y1="40" x2="58" y2="40" stroke="#8b1a1a" stroke-width="0.5"/>
-              <text x="36" y="23" text-anchor="middle" font-family="Courier New" font-size="5" fill="#8b1a1a" font-weight="bold">NEW DELHI</text>
-              <text x="36" y="57" text-anchor="middle" font-family="Courier New" font-size="4" fill="#8b1a1a">GPO · INDIA</text>
-            </svg>
-            <div class="postmark-date">05 MAR<br/>2026<br/>14:22</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="post-media">
-        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=840&q=75" alt="Old Indian bazaar street" loading="lazy">
-        <div class="media-caption">↑ The unnamed street — photographed on expired Kodak film, circa last Tuesday.</div>
-      </div>
-
-      <div class="post-body">
-        <p>There is a street in the old quarter that the map has forgotten. The rickshaw-wallahs know it by feel alone — a left past the broken clock, a right where the smell of cardamom grows thick as fog. Nobody has agreed on its name in forty years, and somehow, that is perfectly fine.</p>
-        <p>I found it on a rainy November morning when I was looking for something else entirely. That is the only way such places are ever found — sideways, through the corner of the eye, when you have stopped insisting on being anywhere in particular.</p>
-        <p>An old woman was frying jalebis outside a blue door that had been painted and repainted so many times the wood had forgotten it was ever wood. She did not ask my name. I did not ask hers. We shared a silence comfortable as an old shawl, and that was enough of an introduction.</p>
-      </div>
-
-      <div class="post-tags">
-        <span class="tag">#olddelhi</span>
-        <span class="tag">#streetwriting</span>
-        <span class="tag">#wandering</span>
-        <span class="tag">#strangerindia</span>
-        <span class="tag">#chai</span>
-      </div>
-
-      <div class="post-actions">
-        <button class="action-btn" onclick="toggleLike(this)">♥ Like (47)</button>
-        <button class="action-btn">↳ Share</button>
-        <button class="action-btn">⎌ Bookmark</button>
-        <button class="action-btn">↗ Print</button>
-      </div>
-
-      <!-- REVIEWS -->
-      <div class="reviews-section">
-        <div class="reviews-title">✉ Reader Dispatches — 3 Letters Received</div>
-
-        <div class="review-card">
-          <div class="review-header">
-            <div class="review-author-block">
-              <div class="review-avatar">P</div>
-              <div>
-                <div class="review-name">Priya Nair</div>
-                <div class="review-meta">Posted from: Kochi, Kerala · 06 Mar 2026, 09:14</div>
-              </div>
-            </div>
-            <div class="review-mini-stamp">
-              <svg viewBox="0 0 44 44">
-                <circle cx="22" cy="22" r="20" stroke="#8b1a1a" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
-                <line x1="8" y1="22" x2="36" y2="22" stroke="#8b1a1a" stroke-width="1.2"/>
-                <line x1="8" y1="19" x2="36" y2="19" stroke="#8b1a1a" stroke-width="0.4"/>
-                <line x1="8" y1="25" x2="36" y2="25" stroke="#8b1a1a" stroke-width="0.4"/>
-                <text x="22" y="14" text-anchor="middle" font-family="Courier New" font-size="3.5" fill="#8b1a1a">KOCHI</text>
-                <text x="22" y="35" text-anchor="middle" font-family="Courier New" font-size="3" fill="#8b1a1a">INDIA</text>
-              </svg>
-            </div>
-          </div>
-          <div class="review-body">"This is the writing I have been searching for — the kind that smells of rain and groundnuts. You have described every gully I have ever been lost in and loved."</div>
-        </div>
-
-        <div class="review-card">
-          <div class="review-header">
-            <div class="review-author-block">
-              <div class="review-avatar">R</div>
-              <div>
-                <div class="review-name">Rajan Verma</div>
-                <div class="review-meta">Posted from: Varanasi, U.P. · 07 Mar 2026, 23:58</div>
-              </div>
-            </div>
-            <div class="review-mini-stamp">
-              <svg viewBox="0 0 44 44">
-                <circle cx="22" cy="22" r="20" stroke="#1a2a5e" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
-                <line x1="8" y1="22" x2="36" y2="22" stroke="#1a2a5e" stroke-width="1.2"/>
-                <line x1="8" y1="19" x2="36" y2="19" stroke="#1a2a5e" stroke-width="0.4"/>
-                <line x1="8" y1="25" x2="36" y2="25" stroke="#1a2a5e" stroke-width="0.4"/>
-                <text x="22" y="14" text-anchor="middle" font-family="Courier New" font-size="3" fill="#1a2a5e">VARANASI</text>
-                <text x="22" y="35" text-anchor="middle" font-family="Courier New" font-size="3" fill="#1a2a5e">INDIA</text>
-              </svg>
-            </div>
-          </div>
-          <div class="review-body">"Bhai, aap ne dil chhu liya. I felt the jalebi lady in my chest — we all have one somewhere in our city's memory."</div>
-        </div>
-
-        <!-- ADD REVIEW FORM -->
-        <div class="add-review">
-          <div class="add-review-title">✍ Write a letter back — your review</div>
-          <div class="form-row">
-            <input type="text" class="form-input" placeholder="Your Name" id="reviewName">
-            <input type="text" class="form-input" placeholder="Your City, State">
-          </div>
-          <textarea class="form-textarea" placeholder="Your thoughts, in ink... write like a letter."></textarea>
-          <button class="submit-btn" onclick="submitReview()"></button>
-        </div>
-      </div>
-    </article>
-
-    <!-- ============ POST 2 ============ -->
-    <article class="postcard" style="animation-delay:0.25s">
-      <div class="postcard-header">
-        <div class="post-headline">
-          <div class="post-category">Video Dispatch · Reel No. 7</div>
-          <h2 class="post-title">Letters My Grandfather Never Sent</h2>
-          <div class="post-byline">
-            <span>By Arjun S. Mehta</span>
-            <span>Video · 8 min</span>
-            <span>5 comments</span>
-            <span>89 likes</span>
-          </div>
-        </div>
-        <div class="post-stamp-area">
-          <div class="postage-stamp">
-            <div class="stamp-inner">📽️</div>
-            <div class="stamp-denom">₹ 5.00</div>
-            <div class="stamp-country">BHARAT</div>
-          </div>
-          <div class="postmark">
-            <svg viewBox="0 0 72 72">
-              <circle cx="36" cy="36" r="33" stroke="#1a2a5e" stroke-width="1.5" fill="none" stroke-dasharray="3,3"/>
-              <circle cx="36" cy="36" r="25" stroke="#1a2a5e" stroke-width="0.75" fill="none"/>
-              <line x1="14" y1="36" x2="58" y2="36" stroke="#1a2a5e" stroke-width="1.5"/>
-              <line x1="14" y1="32" x2="58" y2="32" stroke="#1a2a5e" stroke-width="0.5"/>
-              <line x1="14" y1="40" x2="58" y2="40" stroke="#1a2a5e" stroke-width="0.5"/>
-              <text x="36" y="23" text-anchor="middle" font-family="Courier New" font-size="5" fill="#1a2a5e" font-weight="bold">MUMBAI</text>
-              <text x="36" y="57" text-anchor="middle" font-family="Courier New" font-size="4" fill="#1a2a5e">GPO · INDIA</text>
-            </svg>
-            <div class="postmark-date" style="color:#1a2a5e">08 MAR<br/>2026<br/>19:45</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="post-video" onclick="showToast('▶ REEL PLAYING... (embed your video URL in the post editor)')">
-        <div class="play-btn">▶</div>
-        <div class="video-label">[ CLICK TO PLAY — Reel No. 7 · Super 8 Transfer ]</div>
-      </div>
-
-      <div class="post-body">
-        <p>In the bottom of a tin trunk that smelled of camphor and old rain, my grandfather kept thirty-seven envelopes, each addressed in his careful hand, none of them ever posted. To villages. To cities. To people who had since become memory.</p>
-        <p>I filmed the reading of three of them last November, with the light going golden through the shuttered window of his old room. The camera caught the dust motes and, I think, something else too — something that does not translate into language but lives just fine on film.</p>
-      </div>
-
-      <div class="post-tags">
-        <span class="tag">#familyarchive</span>
-        <span class="tag">#oldletters</span>
-        <span class="tag">#super8</span>
-        <span class="tag">#grandfather</span>
-      </div>
-
-      <div class="post-actions">
-        <button class="action-btn">♥ Like (89)</button>
-        <button class="action-btn">↳ Share</button>
-        <button class="action-btn">⎌ Bookmark</button>
-        <button class="action-btn">↗ Print</button>
-      </div>
-
-      <div class="reviews-section">
-        <div class="reviews-title">✉ Reader Dispatches — 2 Letters Received</div>
-        <div class="review-card">
-          <div class="review-header">
-            <div class="review-author-block">
-              <div class="review-avatar">S</div>
-              <div>
-                <div class="review-name">Sunita Rao</div>
-                <div class="review-meta">Posted from: Hyderabad, Telangana · 09 Mar 2026, 11:30</div>
-              </div>
-            </div>
-            <div class="review-mini-stamp">
-              <svg viewBox="0 0 44 44">
-                <circle cx="22" cy="22" r="20" stroke="#4a2060" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
-                <line x1="8" y1="22" x2="36" y2="22" stroke="#4a2060" stroke-width="1.2"/>
-                <line x1="8" y1="19" x2="36" y2="19" stroke="#4a2060" stroke-width="0.4"/>
-                <line x1="8" y1="25" x2="36" y2="25" stroke="#4a2060" stroke-width="0.4"/>
-                <text x="22" y="14" text-anchor="middle" font-family="Courier New" font-size="2.8" fill="#4a2060">HYDERABAD</text>
-                <text x="22" y="35" text-anchor="middle" font-family="Courier New" font-size="3" fill="#4a2060">INDIA</text>
-              </svg>
-            </div>
-          </div>
-          <div class="review-body">"My nani also had a trunk. I never opened it after she passed. Watching this made me decide I must. Thank you for this courage, wrapped in film grain."</div>
-        </div>
-        <div class="add-review">
-          <div class="add-review-title">✍ Write a letter back</div>
-          <div class="form-row">
-            <input type="text" class="form-input" placeholder="Your Name">
-            <input type="text" class="form-input" placeholder="Your City, State">
-          </div>
-          <textarea class="form-textarea" placeholder="Your words..."></textarea>
-          <button class="submit-btn" onclick="submitReview()"></button>
-        </div>
-      </div>
-    </article>
-
-    <!-- PAGINATION -->
-    <div class="pagination">
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <button class="page-btn">→</button>
-    </div>
-
-  </main>
-
-  <!-- ============ SIDEBAR ============ -->
-  <aside class="sidebar">
-
-    <!-- SEARCH -->
-    <div class="sidebar-widget">
-      <div class="widget-header">⌕ Search Dispatches</div>
-      <div class="widget-body">
-        <div class="search-wrap">
-          <input type="text" class="search-input" placeholder="Find a letter...">
-          <button class="search-btn" onclick="showToast('SEARCHING THE ARCHIVES...')">GO</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- AUTHOR PROFILE -->
-    <div class="sidebar-widget">
-      <div class="widget-header">✦ The Author</div>
-      <div class="widget-body">
-        <div class="author-profile">
-          <div class="author-photo">🧔</div>
-          <div class="author-name">Arjun S. Mehta</div>
-          <div class="author-handle">@arjun_theruh</div>
-          <div class="author-bio">
-            Wanderer. Postcard hoarder. Drinks too much chai. Writes about the unnamed streets and the faces forgotten by photographs. Based somewhere between Delhi and everywhere.
-          </div>
-          <div class="author-stats">
-            <div class="stat-item">
-              <span class="stat-num">142</span>
-              <span class="stat-label">Posts</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-num">4.2k</span>
-              <span class="stat-label">Readers</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-num">89</span>
-              <span class="stat-label">Countries</span>
-            </div>
-          </div>
-          <div class="author-links">
-            <a href="#" class="author-link">Twitter</a>
-            <a href="#" class="author-link">Instagram</a>
-            <a href="#" class="author-link">Email</a>
-            <a href="#" class="author-link">RSS Feed</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CATEGORIES -->
-    <div class="sidebar-widget">
-      <div class="widget-header">◉ Categories</div>
-      <div class="widget-body">
-        <ul class="category-list">
-          <li>Stranger Letters <span class="cat-count">38</span></li>
-          <li>Photographs & Film <span class="cat-count">27</span></li>
-          <li>Video Dispatches <span class="cat-count">14</span></li>
-          <li>Old City Walks <span class="cat-count">31</span></li>
-          <li>Food & Memory <span class="cat-count">19</span></li>
-          <li>Found Objects <span class="cat-count">13</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- RECENT POSTS -->
-    <div class="sidebar-widget">
-      <div class="widget-header">↻ Recent Dispatches</div>
-      <div class="widget-body">
-        <div class="recent-post-item">
-          <div class="recent-thumb">🕌</div>
-          <div>
-            <div class="recent-title">The Mosque That Sings at Dusk</div>
-            <div class="recent-date">09 Mar 2026 · 4 min read</div>
-          </div>
-        </div>
-        <div class="recent-post-item">
-          <div class="recent-thumb">📮</div>
-          <div>
-            <div class="recent-title">Post Office, Platform 7</div>
-            <div class="recent-date">04 Mar 2026 · 3 min read</div>
-          </div>
-        </div>
-        <div class="recent-post-item">
-          <div class="recent-thumb">🫖</div>
-          <div>
-            <div class="recent-title">A Chaiwala's Entire Philosophy</div>
-            <div class="recent-date">28 Feb 2026 · 2 min read</div>
-          </div>
-        </div>
-        <div class="recent-post-item">
-          <div class="recent-thumb">🌧️</div>
-          <div>
-            <div class="recent-title">Monsoon, Without Permission</div>
-            <div class="recent-date">22 Feb 2026 · 5 min read</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NEWSLETTER -->
-    <div class="sidebar-widget">
-      <div class="widget-header">✉ Subscribe by Post</div>
-      <div class="widget-body">
-        <div class="newsletter-text">New dispatches, delivered to your inbox like a letter from a stranger. No algorithm. Just ink.</div>
-        <div class="newsletter-wrap">
-          <input type="email" class="form-input" placeholder="your@email.com">
-          <button class="submit-btn" style="width:100%; text-align:center" onclick="showToast('✉ SUBSCRIPTION CONFIRMED!')">SUBSCRIBE ✦</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAGS CLOUD -->
-    <div class="sidebar-widget">
-      <div class="widget-header">✦ Post Marks</div>
-      <div class="widget-body">
-        <div class="tags-cloud">
-          <span class="tag">#india</span>
-          <span class="tag">#streets</span>
-          <span class="tag">#chai</span>
-          <span class="tag">#film</span>
-          <span class="tag">#memory</span>
-          <span class="tag">#olddelhi</span>
-          <span class="tag">#letters</span>
-          <span class="tag">#bazaar</span>
-          <span class="tag">#monsoon</span>
-          <span class="tag">#trains</span>
-          <span class="tag">#strangers</span>
-          <span class="tag">#postcards</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ARCHIVE -->
-    <div class="sidebar-widget">
-      <div class="widget-header">📁 Archive</div>
-      <div class="widget-body">
-        <ul class="archive-list">
-          <li><span>March 2026</span><span class="cat-count">7</span></li>
-          <li><span>February 2026</span><span class="cat-count">12</span></li>
-          <li><span>January 2026</span><span class="cat-count">9</span></li>
-          <li><span>December 2025</span><span class="cat-count">11</span></li>
-          <li><span>November 2025</span><span class="cat-count">8</span></li>
-          <li><span>October 2025</span><span class="cat-count">15</span></li>
-        </ul>
-      </div>
-    </div>
-
-  </aside>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div>
-      <div class="footer-title">theRuh</div>
-      <div class="footer-text">A journal of peculiar souls, written on antique paper in borrowed ink. Every post is a postcard sent into the void, hoping a stranger reads it and feels less alone.</div>
-    </div>
-    <div>
-      <div class="footer-title">Navigate</div>
-      <ul class="footer-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Dispatches</a></li>
-        <li><a href="#">Stranger Letters</a></li>
-        <li><a href="#">About the Author</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Sitemap</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-title">Get in Touch</div>
-      <ul class="footer-links">
-        <li><a href="#">✉ Send a Letter</a></li>
-        <li><a href="#">RSS Feed</a></li>
-        <li><a href="#">Twitter / X</a></li>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">Write for theRuh</a></li>
-        <li><a href="#">Support the Blog</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 theRuh — Stranger Edition. All dispatches reserved.</span>
-    <span>Typed on a vintage Remington · Printed on aged parchment</span>
-  </div>
-</footer>
-
-<!-- FLOATING NEW POST BUTTON -->
-<button class="new-post-btn" onclick="openModal()">+ DISPATCH A POST</button>
-
-<!-- NEW POST MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <span>✉ COMPOSE A NEW DISPATCH</span>
-      <button class="modal-close" onclick="closeModal()">✕ CLOSE</button>
-    </div>
-    <div class="modal-body">
-
-      <div class="modal-field">
-        <label class="modal-label">Post Title / Headline</label>
-        <input type="text" class="modal-input" id="newTitle" placeholder="Give your dispatch a headline...">
-      </div>
-
-      <div class="modal-field" style="display:flex; gap:10px;">
-        <div style="flex:1">
-          <label class="modal-label">Category</label>
-          <select class="modal-select modal-input">
-            <option>Stranger Letters</option>
-            <option>Photographs & Film</option>
-            <option>Video Dispatches</option>
-            <option>Old City Walks</option>
-            <option>Food & Memory</option>
-            <option>Found Objects</option>
-          </select>
-        </div>
-        <div style="flex:1">
-          <label class="modal-label">Tags (comma separated)</label>
-          <input type="text" class="modal-input" placeholder="#india, #streets, #chai">
-        </div>
-      </div>
-
-      <div class="modal-field">
-        <label class="modal-label">Your Writing — the body of the letter</label>
-        <textarea class="modal-textarea" id="newBody" placeholder="Begin typing... the typewriter awaits. Write as if you are composing a letter to a stranger you have not yet met."></textarea>
-      </div>
-
-      <div class="modal-field">
-        <label class="modal-label">Add Photograph</label>
-        <div class="upload-area" onclick="document.getElementById('imgUpload').click()">
-          <div class="upload-icon">📷</div>
-          <div class="upload-text">CLICK TO ATTACH PHOTOGRAPH · jpg, png, webp</div>
-          <input type="file" id="imgUpload" class="upload-input" accept="image/*" onchange="handleImgUpload(this)">
-        </div>
-        <div id="imgPreview" style="margin-top:8px;"></div>
-      </div>
-
-      <div class="modal-field">
-        <label class="modal-label">Add Video</label>
-        <div class="upload-area" onclick="document.getElementById('vidUpload').click()">
-          <div class="upload-icon">📽️</div>
-          <div class="upload-text">CLICK TO ATTACH VIDEO REEL · mp4, mov, webm</div>
-          <input type="file" id="vidUpload" class="upload-input" accept="video/*">
-        </div>
-      </div>
-
-      <div class="modal-field">
-        <label class="modal-label">Or paste a Video URL (YouTube / Vimeo)</label>
-        <input type="url" class="modal-input" placeholder="https://youtube.com/watch?v=...">
-      </div>
-
-      <div id="modalStampPreview" style="display:flex; align-items:center; gap:12px; margin-top:8px; padding:10px; background:var(--paper-dark); border:1px dashed var(--border);">
-        <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-faded);">Post will be date-stamped:</div>
-        <div style="font-size:12px; font-weight:700; color:var(--stamp-red);" id="liveStampDate"></div>
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn-draft">SAVE AS DRAFT</button>
-        <button class="btn-publish" onclick="publishPost()">✉ DISPATCH — PUBLISH NOW</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  // ---- READING PROGRESS ----
-  window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.body.scrollHeight - window.innerHeight;
-    const progress = (scrollTop / docHeight) * 100;
-    document.getElementById('readingProgress').style.width = progress + '%';
-  });
-
-  // ---- TOAST ----
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg || '✉ DISPATCH SENT!';
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
-
-  // ---- LIKE TOGGLE ----
-  function toggleLike(btn) {
-    btn.classList.toggle('liked');
-    showToast('♥ LIKED — your appreciation noted in the ledger');
-  }
-
-  // ---- REVIEW SUBMIT ----
-  function submitReview() {
-    showToast('✉ REVIEW DISPATCHED — POSTED TO THE BOARD!');
-  }
-
-  // ---- MODAL ----
-  function openModal() {
-    document.getElementById('modalOverlay').classList.add('active');
-    updateStampDate();
-  }
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('active');
-  }
-  function closeModalOnOverlay(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
-  }
-
-  function updateStampDate() {
-    const now = new Date();
-    const opts = { day:'2-digit', month:'short', year:'numeric' };
-    const dateStr = now.toLocaleDateString('en-IN', opts).toUpperCase();
-    const timeStr = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', hour12: false });
-    document.getElementById('liveStampDate').textContent = `${dateStr} · ${timeStr} IST`;
-  }
-  setInterval(updateStampDate, 30000);
-
-  // ---- IMAGE UPLOAD PREVIEW ----
-  function handleImgUpload(input) {
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const preview = document.getElementById('imgPreview');
-        preview.innerHTML = `
-          <div style="position:relative; display:inline-block; max-width:100%;">
-            <img src="${e.target.result}" style="max-width:100%; max-height:200px; border:1px solid var(--border); filter:sepia(30%);" alt="Preview">
-            <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(26,16,8,0.7);color:var(--paper);font-size:10px;padding:4px 8px;letter-spacing:0.1em;text-transform:uppercase;">PHOTOGRAPH ATTACHED ✓</div>
-          </div>`;
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  // ---- PUBLISH ----
-  function publishPost() {
-    const title = document.getElementById('newTitle').value.trim();
-    const body = document.getElementById('newBody').value.trim();
-    if (!title || !body) {
-      showToast('✗ MISSING TITLE OR BODY — complete your letter');
-      return;
-    }
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase();
-    const timeStr = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', hour12:false });
-
-    // Build new postcard
-    const article = document.createElement('article');
-    article.className = 'postcard';
-    article.style.animationDelay = '0s';
-    article.innerHTML = `
-      <div class="postcard-header">
-        <div class="post-headline">
-          <div class="post-category">New Dispatch · Just Arrived</div>
-          <h2 class="post-title tw-cursor">${title}</h2>
-          <div class="post-byline">
-            <span>By Arjun S. Mehta</span>
-            <span>Just now</span>
-            <span>0 comments</span>
-          </div>
-        </div>
-        <div class="post-stamp-area">
-          <div class="postage-stamp">
-            <div class="stamp-inner">✉</div>
-            <div class="stamp-denom">₹ 3.00</div>
-            <div class="stamp-country">BHARAT</div>
-          </div>
-          <div class="postmark">
-            <svg viewBox="0 0 72 72">
-              <circle cx="36" cy="36" r="33" stroke="#8b1a1a" stroke-width="1.5" fill="none" stroke-dasharray="3,3"/>
-              <circle cx="36" cy="36" r="25" stroke="#8b1a1a" stroke-width="0.75" fill="none"/>
-              <line x1="14" y1="36" x2="58" y2="36" stroke="#8b1a1a" stroke-width="1.5"/>
-              <line x1="14" y1="32" x2="58" y2="32" stroke="#8b1a1a" stroke-width="0.5"/>
-              <line x1="14" y1="40" x2="58" y2="40" stroke="#8b1a1a" stroke-width="0.5"/>
-              <text x="36" y="23" text-anchor="middle" font-family="Courier New" font-size="4.5" fill="#8b1a1a" font-weight="bold">INDIA · GPO</text>
-              <text x="36" y="57" text-anchor="middle" font-family="Courier New" font-size="3.5" fill="#8b1a1a">DISPATCHED</text>
-            </svg>
-            <div class="postmark-date">${dateStr.split(' ').slice(0,2).join(' ')}<br/>${dateStr.split(' ')[2]}<br/>${timeStr}</div>
-          </div>
-        </div>
-      </div>
-      <div class="post-body"><p>${body.replace(/\n/g,'</p><p>')}</p></div>
-      <div class="post-actions">
-        <button class="action-btn" onclick="toggleLike(this)">♥ Like (0)</button>
-        <button class="action-btn">↳ Share</button>
-        <button class="action-btn">⎌ Bookmark</button>
-      </div>
-      <div class="reviews-section">
-        <div class="reviews-title">✉ Reader Dispatches — Be the first</div>
-        <div class="add-review">
-          <div class="add-review-title">✍ Write a letter back</div>
-          <div class="form-row">
-            <input type="text" class="form-input" placeholder="Your Name">
-            <input type="text" class="form-input" placeholder="Your City, State">
-          </div>
-          <textarea class="form-textarea" placeholder="Your words..."></textarea>
-          <button class="submit-btn" onclick="submitReview()"></button>
-        </div>
-      </div>`;
-
-    const main = document.querySelector('main');
-    main.insertBefore(article, main.firstChild);
-    closeModal();
-    showToast('✉ DISPATCH POSTED — SEALED AND DELIVERED!');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.getElementById('newTitle').value = '';
-    document.getElementById('newBody').value = '';
-    document.getElementById('imgPreview').innerHTML = '';
-  }
-
-  // ---- TYPEWRITER SOUND SIMULATION ----
-  // Subtle visual feedback on typing (typewriter class)
-  document.querySelectorAll('.form-input, .form-textarea, .modal-input, .modal-textarea').forEach(el => {
-    el.addEventListener('keydown', (e) => {
-      if (e.key.length === 1 || e.key === 'Backspace') {
-        el.style.transform = `rotate(${(Math.random()-0.5)*0.3}deg)`;
-        setTimeout(() => el.style.transform = '', 80);
-      }
-    });
-  });
-
-  // ---- INIT ----
-  updateStampDate();
-</script>
-
-</body>
-</html>
+  .search-wrap { display: flex; }
